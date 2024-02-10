@@ -225,13 +225,13 @@ async function getAccessToken(scopeInput){
 
     const apiUrl = "https://prod-18.uksouth.logic.azure.com:443/workflows/d8f90f38261044b19829e27d147f0023/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-N-bYaES64moEe0gFiP5J6XGoZBwCVZTmYZmUbdJkPk";
     //console.log(apiUrl)
-    console.log(requestOptions)
+    //console.log(requestOptions)
     signedURLData = await fetch(apiUrl,requestOptions)
         .then(response => response.json())
         .then(data => {
             const JSONdata = data
 
-        console.log(JSONdata)
+        //console.log(JSONdata)
 
         return JSONdata.access_token
         })
