@@ -7,8 +7,6 @@ const folders =[
     "urn:adsk.wipemea:fs.folder:co.eAYof_jAT4CEEWexlbl35w", // 0G.PUBLISHED
     "urn:adsk.wipemea:fs.folder:co.zKkBY6rfQGadO5owcDYKIQ", // 0H.ARCHIVED
 ]
-const clientId = "UMPIoFc8iQoJ2eKS6GsJbCGSmMb4s1PY";
-const clientSecret = "3VP1GrzLLvOUoEzu";
 
 const projectID = "7c7ca0c5-bfc3-4ef1-9396-c72c6270f457";
 const namingstandardID ="142f8789-4126-5e87-b60e-e1a565ccdb67"
@@ -80,7 +78,7 @@ function generateDocName(){
 
 async function getNamingStandard() {
     try {
-        access_token = await generateTokenDataCreate(clientId, clientSecret);
+        access_token = await getAccessToken("data:read");
     } catch {
         console.log("Error: Getting Access Token");
     }
@@ -187,7 +185,7 @@ async function getNamingStandard() {
 
 async function getfileslist() {
     try {
-        access_token = await generateTokenDataCreate(clientId, clientSecret);
+        access_token = await getAccessToken("data:read");
     } catch {
         console.log("Error: Getting Access Token");
     }
@@ -209,8 +207,41 @@ async function getfileslist() {
     }
     console.log(filelist)
 }
+async function getAccessToken(scopeInput){
 
-async function generateTokenDataCreate(clientId,clientSecret){
+    const bodyData = {
+        scope: scopeInput,
+        };
+
+    const headers = {
+        'Content-Type':'application/json'
+    };
+
+    const requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(bodyData)
+    };
+
+    const apiUrl = "https://prod-18.uksouth.logic.azure.com:443/workflows/d8f90f38261044b19829e27d147f0023/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-N-bYaES64moEe0gFiP5J6XGoZBwCVZTmYZmUbdJkPk";
+    //console.log(apiUrl)
+    console.log(requestOptions)
+    signedURLData = await fetch(apiUrl,requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            const JSONdata = data
+
+        console.log(JSONdata)
+
+        return JSONdata.access_token
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+
+    return signedURLData
+}
+
+async function generateTokenDataRead(clientId,clientSecret){
     const bodyData = {
     client_id: clientId,
     client_secret: clientSecret,
